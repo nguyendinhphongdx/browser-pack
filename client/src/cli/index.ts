@@ -9,6 +9,7 @@ import { profileListCommand } from './commands/local/profile-list.js';
 import { profileRmCommand } from './commands/local/profile-rm.js';
 import { packCommand } from './commands/local/pack.js';
 import { upgradeCommand } from './commands/local/upgrade.js';
+import { purgeCommand } from './commands/local/purge.js';
 
 // Remote commands
 import { remoteProfileListCommand } from './commands/remote/profile-list.js';
@@ -35,6 +36,7 @@ export function createProgram(): Command {
   // Pack (top-level)
   program.addCommand(packCommand);
   program.addCommand(upgradeCommand);
+  program.addCommand(purgeCommand);
 
   // Pull (top-level)
   program.addCommand(pullCommand);

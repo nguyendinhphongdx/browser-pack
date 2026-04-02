@@ -1,7 +1,9 @@
 import type { BrowserType, Platform } from './types.js';
 
 export const APP_NAME = 'browserpack';
-export const APP_VERSION = '0.1.0';
+import { createRequire } from 'node:module';
+const __require = createRequire(import.meta.url);
+export const APP_VERSION: string = __require('../../../package.json').version;
 export const CONFIG_DIR = '.browserpack';
 export const CONFIG_FILE = 'config.json';
 
