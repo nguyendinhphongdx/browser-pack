@@ -5,7 +5,7 @@ import { exec } from 'node:child_process';
 import { logger } from '../../../core/logger.js';
 import { saveAuth } from '../../../auth/store.js';
 
-const DEFAULT_SERVER_URL = process.env.BROWSERPACK_SERVER || 'https://browserpack.vercel.app';
+const DEFAULT_SERVER_URL = process.env.BROWSERPACK_SERVER || 'https://browser-pack.vercel.app';
 
 function ask(question: string, hide = false): Promise<string> {
   const rl = createInterface({ input: process.stdin, output: process.stderr });
