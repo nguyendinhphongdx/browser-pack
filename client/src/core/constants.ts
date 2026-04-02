@@ -1,9 +1,24 @@
 import type { BrowserType, Platform } from './types.js';
 
 export const APP_NAME = 'browserpack';
-import { createRequire } from 'node:module';
-const __require = createRequire(import.meta.url);
-export const APP_VERSION: string = __require('../../../package.json').version;
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+// Walk up to find package.json (works from both src/ and dist/)
+function findPackageVersion(): string {
+  let dir = __dirname;
+  for (let i = 0; i < 5; i++) {
+    try {
+      const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf-8'));
+      if (pkg.name === '@phongnd-base/browserpack') return pkg.version;
+    } catch { /* continue */ }
+    dir = dirname(dir);
+  }
+  return '0.0.0';
+}
+export const APP_VERSION: string = findPackageVersion();
 export const CONFIG_DIR = '.browserpack';
 export const CONFIG_FILE = 'config.json';
 
