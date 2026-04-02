@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth';
+import { getAuthUser } from '@/lib/auth';
 import { getBackup } from '@/services/backup';
 import { downloadFromStorage, getStorageObjectSize } from '@/lib/gcs';
 
@@ -7,8 +7,10 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const user = getAuthUser(request);
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   try {
-    const user = requireAuth(request);
     const { id } = await params;
     const backup = await getBackup(id, user.id);
 
@@ -33,7 +35,8 @@ export async function GET(
         'Content-Length': String(size),
       },
     });
-  } catch {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  } catch (err) {
+    console.error('Download error:', err);
+    return NextResponse.json({ error: 'Download failed' }, { status: 500 });
   }
 }
