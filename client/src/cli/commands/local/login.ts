@@ -19,11 +19,13 @@ function ask(question: string, hide = false): Promise<string> {
 
 function openBrowser(url: string): void {
   const platform = process.platform;
-  const cmd =
-    platform === 'darwin' ? 'open' :
-    platform === 'win32' ? 'start' :
-    'xdg-open';
-  exec(`${cmd} "${url}"`);
+  if (platform === 'win32') {
+    // 'start' treats the first quoted arg as window title, so pass empty title
+    exec(`start "" "${url}"`);
+  } else {
+    const cmd = platform === 'darwin' ? 'open' : 'xdg-open';
+    exec(`${cmd} "${url}"`);
+  }
 }
 
 async function loginWithBrowser(serverUrl: string): Promise<{ token: string; email: string; name: string }> {
