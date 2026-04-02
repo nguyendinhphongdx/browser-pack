@@ -29,10 +29,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+        if: runner.os != 'Windows'
 
-      - name: Fix native bindings (Windows)
+      - name: Install dependencies (Windows)
+        run: npm install
         if: runner.os == 'Windows'
-        run: npm rebuild
 
       - name: Typecheck
         run: npx tsc --noEmit
