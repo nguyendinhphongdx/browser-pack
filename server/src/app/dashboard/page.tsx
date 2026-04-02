@@ -40,20 +40,20 @@ export default async function DashboardPage() {
       <Navbar email={user.email} />
       <main className="mx-auto max-w-5xl px-6 py-10">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Your Backups</h1>
-          <span className="text-sm text-gray-500">{backups.length} backup(s)</span>
+          <h1 className="text-2xl font-bold text-[var(--foreground)]">Your Backups</h1>
+          <span className="text-sm text-[var(--muted)]">{backups.length} backup(s)</span>
         </div>
         <BackupTable initialBackups={backupData} />
 
-        <div className="mt-12 rounded-xl border border-gray-200 bg-gray-50 p-6">
-          <h2 className="text-lg font-semibold mb-3">Quick start</h2>
-          <div className="space-y-2 text-sm text-gray-700">
+        <div className="mt-12 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-6">
+          <h2 className="text-lg font-semibold mb-3 text-[var(--foreground)]">Quick start</h2>
+          <div className="space-y-2 text-sm text-[var(--muted)]">
             <p>Pack a profile from your machine:</p>
-            <code className="block bg-white border border-gray-200 rounded-lg px-4 py-2">
+            <code className="block bg-[var(--code-bg)] border border-[var(--card-border)] rounded-lg px-4 py-2 text-[var(--accent)]">
               browserpack pack --browser chrome
             </code>
             <p className="mt-3">Pull a backup on another machine:</p>
-            <code className="block bg-white border border-gray-200 rounded-lg px-4 py-2">
+            <code className="block bg-[var(--code-bg)] border border-[var(--card-border)] rounded-lg px-4 py-2 text-[var(--accent)]">
               browserpack pull {backups[0]?.id || '<backup-id>'}
             </code>
           </div>

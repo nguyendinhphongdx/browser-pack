@@ -8,6 +8,7 @@ import { whoamiCommand } from './commands/local/whoami.js';
 import { profileListCommand } from './commands/local/profile-list.js';
 import { profileRmCommand } from './commands/local/profile-rm.js';
 import { packCommand } from './commands/local/pack.js';
+import { upgradeCommand } from './commands/local/upgrade.js';
 
 // Remote commands
 import { remoteProfileListCommand } from './commands/remote/profile-list.js';
@@ -33,6 +34,7 @@ export function createProgram(): Command {
 
   // Pack (top-level)
   program.addCommand(packCommand);
+  program.addCommand(upgradeCommand);
 
   // Pull (top-level)
   program.addCommand(pullCommand);

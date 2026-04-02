@@ -34,44 +34,44 @@ export default function BackupTable({ initialBackups }: { initialBackups: Backup
 
   if (backups.length === 0) {
     return (
-      <div className="text-center py-16 text-gray-500">
+      <div className="text-center py-16 text-[var(--muted)]">
         <p className="text-lg mb-2">No backups yet</p>
         <p className="text-sm">
           Use the CLI to pack your first browser profile:
-          <code className="ml-2 bg-gray-100 px-2 py-1 rounded text-gray-800">browserpack pack</code>
+          <code className="ml-2 bg-[var(--code-bg)] px-2 py-1 rounded text-[var(--accent)]">browserpack pack</code>
         </p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-xl border border-[var(--card-border)]">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-gray-200 text-left text-gray-500">
-            <th className="pb-3 font-medium">Name</th>
-            <th className="pb-3 font-medium">Browser</th>
-            <th className="pb-3 font-medium">Profile</th>
-            <th className="pb-3 font-medium">Platform</th>
-            <th className="pb-3 font-medium">Size</th>
-            <th className="pb-3 font-medium">Date</th>
-            <th className="pb-3 font-medium"></th>
+          <tr className="border-b border-[var(--card-border)] text-left text-[var(--muted)] bg-[var(--card-bg)]">
+            <th className="px-4 py-3 font-medium">Name</th>
+            <th className="px-4 py-3 font-medium">Browser</th>
+            <th className="px-4 py-3 font-medium">Profile</th>
+            <th className="px-4 py-3 font-medium">Platform</th>
+            <th className="px-4 py-3 font-medium">Size</th>
+            <th className="px-4 py-3 font-medium">Date</th>
+            <th className="px-4 py-3 font-medium"></th>
           </tr>
         </thead>
         <tbody>
           {backups.map((b) => (
-            <tr key={b.id} className="border-b border-gray-100 hover:bg-gray-50">
-              <td className="py-3 font-medium text-gray-900">{b.name}</td>
-              <td className="py-3 text-gray-600">{b.browser}</td>
-              <td className="py-3 text-gray-600">{b.profileName}</td>
-              <td className="py-3 text-gray-600">{b.platform}</td>
-              <td className="py-3 text-gray-600">{(b.size / 1024 / 1024).toFixed(2)} MB</td>
-              <td className="py-3 text-gray-600">{new Date(b.createdAt).toLocaleDateString()}</td>
-              <td className="py-3">
+            <tr key={b.id} className="border-b border-[var(--card-border)] hover:bg-white/[0.02] transition-colors">
+              <td className="px-4 py-3 font-medium text-[var(--foreground)]">{b.name}</td>
+              <td className="px-4 py-3 text-[var(--muted)]">{b.browser}</td>
+              <td className="px-4 py-3 text-[var(--muted)]">{b.profileName}</td>
+              <td className="px-4 py-3 text-[var(--muted)]">{b.platform}</td>
+              <td className="px-4 py-3 text-[var(--muted)]">{(b.size / 1024 / 1024).toFixed(2)} MB</td>
+              <td className="px-4 py-3 text-[var(--muted)]">{new Date(b.createdAt).toLocaleDateString()}</td>
+              <td className="px-4 py-3">
                 <button
                   onClick={() => handleDelete(b.id)}
                   disabled={deleting === b.id}
-                  className="text-red-600 hover:text-red-800 text-sm disabled:opacity-50"
+                  className="text-red-400 hover:text-red-300 text-sm disabled:opacity-50 transition-colors"
                 >
                   {deleting === b.id ? 'Deleting...' : 'Delete'}
                 </button>
