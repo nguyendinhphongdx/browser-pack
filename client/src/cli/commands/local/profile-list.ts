@@ -5,7 +5,7 @@ import { isBrowserRunning } from '../../../profile/lock-checker.js';
 import { logger } from '../../../core/logger.js';
 import type { BrowserType } from '../../../core/types.js';
 
-export const profileListCommand = new Command('list')
+export const profileListCommand = new Command('ls')
   .description('List local browser profiles')
   .option('-b, --browser <type>', 'Filter by browser (chrome, brave, edge, chromium)')
   .action(async (opts) => {

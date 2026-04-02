@@ -5,9 +5,17 @@ let _storage: Storage | null = null;
 
 function getStorage(): Storage {
   if (!_storage) {
-    _storage = new Storage({
-      keyFilename: process.env.GCS_KEY_FILE || undefined,
-    });
+    if (process.env.GCS_CREDENTIALS) {
+      // Deploy: JSON string in env var (Vercel, Railway, etc.)
+      const credentials = JSON.parse(process.env.GCS_CREDENTIALS);
+      _storage = new Storage({ credentials });
+    } else if (process.env.GCS_KEY_FILE) {
+      // Local dev: path to service account JSON file
+      _storage = new Storage({ keyFilename: process.env.GCS_KEY_FILE });
+    } else {
+      // GCP environments (Cloud Run, GKE): uses default credentials
+      _storage = new Storage();
+    }
   }
   return _storage;
 }

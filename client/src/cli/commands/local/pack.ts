@@ -68,6 +68,7 @@ export const packCommand = new Command('pack')
   .option('-o, --output <path>', 'Output path for local-only mode')
   .option('--name <name>', 'Custom name for the backup')
   .action(async (opts) => {
+    let finalArchivePath: string | undefined;
     try {
       const VALID_BROWSERS = ['chrome', 'chromium', 'brave', 'edge'];
 
@@ -106,7 +107,7 @@ export const packCommand = new Command('pack')
       spinner.succeed(`Archive: ${sizeMB} MB, ${result.manifest.includedFiles.length} files`);
 
       // Encryption
-      let finalArchivePath = result.archivePath;
+      finalArchivePath = result.archivePath;
       const shouldEncrypt = opts.encrypt !== false;
 
       if (shouldEncrypt) {
@@ -169,6 +170,8 @@ export const packCommand = new Command('pack')
         spinner.succeed(`Uploaded: ${backup.name} (ID: ${backup.id})`);
       }
     } catch (error) {
+      // Cleanup temp files on failure
+      if (finalArchivePath) await rm(finalArchivePath, { force: true }).catch(() => {});
       logger.error((error as Error).message);
       process.exit(1);
     }

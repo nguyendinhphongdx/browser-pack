@@ -4,7 +4,7 @@ import { logger } from '../../../core/logger.js';
 import { loadAuth } from '../../../auth/store.js';
 import { ApiClient } from '../../../api/client.js';
 
-export const remoteProfileListCommand = new Command('list')
+export const remoteProfileListCommand = new Command('ls')
   .description('List profiles backed up on cloud')
   .option('--format <format>', 'Output format (table, json)', 'table')
   .action(async (opts) => {

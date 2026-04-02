@@ -24,23 +24,28 @@ function ask(question: string): Promise<string> {
 
 export const pullCommand = new Command('pull')
   .description('Download and restore a browser profile from cloud')
-  .argument('<id>', 'Backup ID to pull')
+  .option('--id <id>', 'Backup ID to pull')
+  .option('--name <name>', 'Backup name to pull')
   .option('-b, --browser <type>', 'Target browser type')
   .option('-p, --profile <name>', 'Target profile name', 'Default')
   .option('--password <password>', 'Decryption password (prompted if omitted)')
-  .option('--force', 'Overwrite existing profile', false)
+  .option('--force', 'Overwrite existing profile instead of creating new', false)
   .option('--skip-version-check', 'Skip version mismatch warning', false)
   .option('--from-file <path>', 'Restore from local .bpak file instead of cloud')
-  .action(async (id: string, opts) => {
+  .action(async (opts) => {
     let tmpDir: string | undefined;
     try {
       let bpakPath: string;
       let manifestPath: string;
+      let backupId: string;
+      let backupName: string;
 
       if (opts.fromFile) {
         bpakPath = resolve(opts.fromFile);
         const ext = bpakPath.endsWith('.bpak') ? '.bpak' : '.tar.gz';
         manifestPath = bpakPath.replace(ext, '.manifest.json');
+        backupId = 'local';
+        backupName = 'local';
       } else {
         // Download from cloud
         const auth = await loadAuth();
@@ -50,34 +55,67 @@ export const pullCommand = new Command('pull')
         }
 
         const client = new ApiClient(auth.serverUrl, auth.token);
+
+        // Resolve backup ID from --id or --name
+        if (opts.id) {
+          backupId = opts.id;
+          backupName = opts.id;
+        } else if (opts.name) {
+          // Find backup by name
+          const backups = await client.listBackups();
+          const match = backups.find((b) => b.name === opts.name);
+          if (!match) {
+            logger.error(`Backup "${opts.name}" not found. Run "browserpack remote profile ls" to see available backups.`);
+            process.exit(1);
+          }
+          backupId = match.id;
+          backupName = match.name;
+        } else {
+          logger.error('Specify --id or --name. Run "browserpack remote profile ls" to see available backups.');
+          process.exit(1);
+        }
+
         tmpDir = await mkdtemp(join(tmpdir(), 'browserpack-pull-'));
-        bpakPath = join(tmpDir, `${id}.bpak`);
-        manifestPath = join(tmpDir, `${id}.manifest.json`);
+        bpakPath = join(tmpDir, `${backupId}.bpak`);
+        manifestPath = join(tmpDir, `${backupId}.manifest.json`);
 
         const dlSpinner = ora('Downloading from cloud...').start();
-        await client.downloadBackup(id, bpakPath, (transferred, total) => {
+        await client.downloadBackup(backupId, bpakPath, (transferred, total) => {
           const pct = Math.round((transferred / total) * 100);
           dlSpinner.text = `Downloading... ${pct}%`;
         });
 
-        await client.downloadManifest(id, manifestPath);
+        await client.downloadManifest(backupId, manifestPath);
         dlSpinner.succeed('Download complete.');
       }
 
       // Decrypt if .bpak
       let archivePath: string;
       if (bpakPath.endsWith('.bpak')) {
-        let password = opts.password as string | undefined;
-        if (!password) {
-          password = await ask('Decryption password: ');
-        }
-
-        const decSpinner = ora('Decrypting...').start();
         const decDir = tmpDir ?? await mkdtemp(join(tmpdir(), 'browserpack-dec-'));
         if (!tmpDir) tmpDir = decDir;
         archivePath = join(decDir, 'profile.tar.gz');
-        await decryptFile(bpakPath, archivePath, password);
-        decSpinner.succeed('Decrypted.');
+
+        let password = opts.password as string | undefined;
+        const maxRetries = password ? 1 : 3;
+
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+          if (!password) {
+            password = await ask('Decryption password: ');
+          }
+          const decSpinner = ora('Decrypting...').start();
+          try {
+            await decryptFile(bpakPath, archivePath, password);
+            decSpinner.succeed('Decrypted.');
+            break;
+          } catch {
+            decSpinner.fail('Wrong password.');
+            if (attempt === maxRetries) {
+              throw new Error('Decryption failed after maximum retries.');
+            }
+            password = undefined; // Reset to prompt again
+          }
+        }
       } else {
         archivePath = bpakPath;
       }
@@ -97,18 +135,19 @@ export const pullCommand = new Command('pull')
       }
 
       const targetProfile = await getProfile(browser, opts.profile);
-      logger.info(`Target: [${browser}] ${targetProfile.profileName}`);
 
-      await unpackProfile({
+      const restored = await unpackProfile({
         archivePath,
         manifestPath,
         targetProfile,
+        backupId,
+        backupName,
         force: opts.force,
         skipVersionCheck: opts.skipVersionCheck,
       });
 
       logger.success('Profile restored successfully!');
-      logger.info(`Open ${browser} to use the restored profile.`);
+      logger.info(`Open ${browser} and switch to "${restored.profileName}" to use it.`);
     } catch (error) {
       logger.error((error as Error).message);
       process.exit(1);

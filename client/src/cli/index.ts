@@ -6,6 +6,7 @@ import { loginCommand } from './commands/local/login.js';
 import { logoutCommand } from './commands/local/logout.js';
 import { whoamiCommand } from './commands/local/whoami.js';
 import { profileListCommand } from './commands/local/profile-list.js';
+import { profileRmCommand } from './commands/local/profile-rm.js';
 import { packCommand } from './commands/local/pack.js';
 
 // Remote commands
@@ -27,6 +28,7 @@ export function createProgram(): Command {
   const profileCmd = new Command('profile')
     .description('Manage local browser profiles');
   profileCmd.addCommand(profileListCommand);
+  profileCmd.addCommand(profileRmCommand);
   program.addCommand(profileCmd);
 
   // Pack (top-level)

@@ -26,8 +26,14 @@
     "chrome",
     "encrypt"
   ],
-  "author": "",
+  "author": "phong.nguyen02",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pnguyen02/BrowserPack.git",
+    "directory": "client"
+  },
+  "homepage": "https://github.com/pnguyen02/BrowserPack#readme",
   "engines": {
     "node": ">=18.0.0"
   },

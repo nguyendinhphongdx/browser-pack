@@ -4,7 +4,7 @@ import { logger } from '../../../core/logger.js';
 import { loadAuth } from '../../../auth/store.js';
 import { ApiClient } from '../../../api/client.js';
 
-export const remoteDeleteCommand = new Command('delete')
+export const remoteDeleteCommand = new Command('rm')
   .description('Delete a backup from cloud')
   .argument('<id>', 'Backup ID to delete')
   .option('--force', 'Skip confirmation', false)

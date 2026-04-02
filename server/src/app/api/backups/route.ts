@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const backups = await listBackups(user.id);
 
     return NextResponse.json({
-      backups: backups.map((b) => ({
+      backups: backups.map((b: { id: string; name: string; size: number; browser: string; platform: string; profileName: string; createdAt: Date }) => ({
         id: b.id,
         name: b.name,
         size: b.size,
