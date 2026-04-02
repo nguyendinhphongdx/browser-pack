@@ -1,0 +1,17 @@
+{
+  "profile": {
+    "info_cache": {
+      "Default": {
+        "name": "Test User",
+        "gaia_name": "test@gmail.com"
+      },
+      "Profile 1": {
+        "name": "Work",
+        "gaia_name": "work@company.com"
+      }
+    }
+  },
+  "browser": {
+    "last_version": "124.0.6367.91"
+  }
+}

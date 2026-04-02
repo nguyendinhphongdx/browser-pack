@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  googleId  String   @unique @map("google_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  backups   Backup[]
+
+  @@map("users")
+}
+
+model Backup {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  name        String
+  size        Int
+  browser     String
+  platform    String
+  profileName String   @map("profile_name")
+  storageKey  String   @map("storage_key")
+  manifestKey String   @map("manifest_key")
+  createdAt   DateTime @default(now()) @map("created_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("backups")
+}
