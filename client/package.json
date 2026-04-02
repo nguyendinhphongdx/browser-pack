@@ -1,6 +1,6 @@
 {
   "name": "@phongnd-base/browserpack",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "description": "Pack, encrypt, and sync browser profiles across machines",
   "type": "module",
   "bin": {
