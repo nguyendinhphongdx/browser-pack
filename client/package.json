@@ -30,10 +30,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pnguyen02/BrowserPack.git",
+    "url": "git+https://github.com/nguyendinhphongdx/browser-pack.git",
     "directory": "client"
   },
-  "homepage": "https://github.com/pnguyen02/BrowserPack#readme",
+  "homepage": "https://github.com/nguyendinhphongdx/browser-pack#readme",
   "engines": {
     "node": ">=20.0.0"
   },
