@@ -1,6 +1,6 @@
 {
   "name": "@hanoilab/bpacker",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Pack, encrypt, and sync browser profiles across machines",
   "type": "module",
   "bin": {
@@ -33,7 +33,7 @@
     "url": "git+https://github.com/nguyendinhphongdx/browser-pack.git",
     "directory": "client"
   },
-  "homepage": "https://github.com/nguyendinhphongdx/browser-pack#readme",
+  "homepage": "https://browser-pack.vercel.app",
   "engines": {
     "node": ">=20.0.0"
   },

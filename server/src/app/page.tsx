@@ -94,7 +94,7 @@ export default function LandingPage() {
                   <span className="text-[var(--muted)]">$</span>{' '}
                   <span className="text-[var(--accent)]">npm</span> install -g @hanoilab/bpacker
                 </pre>
-                <CopyButton text="npm install -g @hanoilab/bpacker" />
+                <CopyButton text="npm install -g @hanoilab/bpacker@latest" />
               </div>
             </div>
           </div>
@@ -126,9 +126,9 @@ export default function LandingPage() {
                   </div>
                   <pre>
                     <span className="text-[var(--muted)]">$</span>{' '}
-                    <span className="text-[var(--accent)]">npm</span> install -g @hanoilab/bpacker
+                    <span className="text-[var(--accent)]">npm</span> install -g @hanoilab/bpacker@latest
                   </pre>
-                  <CopyButton text="npm install -g @hanoilab/bpacker" />
+                  <CopyButton text="npm install -g @hanoilab/bpacker@latest" />
                 </div>
               </div>
             </div>
