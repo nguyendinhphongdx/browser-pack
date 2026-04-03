@@ -1,16 +1,16 @@
 {
-  "name": "@phongnd-base/browserpack",
+  "name": "@hanoilab/bpacker",
   "version": "1.0.7",
   "description": "Pack, encrypt, and sync browser profiles across machines",
   "type": "module",
   "bin": {
-    "browserpack": "./dist/bin/browserpack.js"
+    "bpacker": "./dist/bin/bpacker.js"
   },
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
   "scripts": {
     "build": "tsup",
-    "dev": "tsx bin/browserpack.ts",
+    "dev": "tsx bin/bpacker.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint src/ bin/ test/",

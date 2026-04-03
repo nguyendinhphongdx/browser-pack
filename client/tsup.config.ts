@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['src/index.ts', 'bin/browserpack.ts'],
+  entry: ['src/index.ts', 'bin/bpacker.ts'],
   format: ['esm'],
   dts: false,
   sourcemap: true,

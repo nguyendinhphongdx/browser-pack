@@ -8,7 +8,7 @@ export const whoamiCommand = new Command('whoami')
   .action(async () => {
     const auth = await loadAuth();
     if (!auth) {
-      logger.info('Not logged in. Run "browserpack login" first.');
+      logger.info('Not logged in. Run "bpacker login" first.');
       return;
     }
 

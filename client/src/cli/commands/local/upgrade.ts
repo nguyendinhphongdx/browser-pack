@@ -10,7 +10,7 @@ export const upgradeCommand = new Command('upgrade')
       logger.info(`Current version: ${APP_VERSION}`);
       logger.info('Checking for updates...');
 
-      const latest = execSync('npm view @phongnd-base/browserpack version', {
+      const latest = execSync('npm view @hanoilab/bpacker version', {
         encoding: 'utf-8',
         stdio: 'pipe',
       }).trim();
@@ -23,7 +23,7 @@ export const upgradeCommand = new Command('upgrade')
       logger.info(`New version available: ${latest}`);
       logger.info('Upgrading...');
 
-      execSync('npm install -g @phongnd-base/browserpack@latest', {
+      execSync('npm install -g @hanoilab/bpacker@latest', {
         stdio: 'inherit',
       });
 

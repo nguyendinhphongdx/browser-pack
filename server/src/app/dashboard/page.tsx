@@ -50,11 +50,11 @@ export default async function DashboardPage() {
           <div className="space-y-2 text-sm text-[var(--muted)]">
             <p>Pack a profile from your machine:</p>
             <code className="block bg-[var(--code-bg)] border border-[var(--card-border)] rounded-lg px-4 py-2 text-[var(--accent)]">
-              browserpack pack --browser chrome
+              bpacker pack --browser chrome
             </code>
             <p className="mt-3">Pull a backup on another machine:</p>
             <code className="block bg-[var(--code-bg)] border border-[var(--card-border)] rounded-lg px-4 py-2 text-[var(--accent)]">
-              browserpack pull {backups[0]?.id || '<backup-id>'}
+              bpacker pull {backups[0]?.id || '<backup-id>'}
             </code>
           </div>
         </div>

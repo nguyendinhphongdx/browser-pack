@@ -77,6 +77,14 @@ async function writeLocalState(chromeDataDir: string, state: Record<string, unkn
   await writeFile(join(chromeDataDir, 'Local State'), JSON.stringify(state, null, 2), 'utf-8');
 }
 
+export interface SourceProfileMeta {
+  gaiaName?: string;
+  userName?: string;
+  gaiaId?: string;
+  pictureFileName?: string;
+  pictureUrl?: string;
+}
+
 /**
  * Create a new profile entry in Chrome's Local State.
  * Returns the ProfileInfo for the newly created profile slot.
@@ -87,6 +95,7 @@ export async function createNewProfile(
   profileName: string,
   browser: ProfileInfo['browser'],
   platform: Platform,
+  sourceMeta?: SourceProfileMeta,
 ): Promise<ProfileInfo> {
   const state = await readFullLocalState(chromeDataDir);
 
@@ -107,8 +116,8 @@ export async function createNewProfile(
   }
   const profileDir = `Profile ${n}`;
 
-  // Add entry to info_cache with minimum fields Chrome requires
-  infoCache[profileDir] = {
+  // Add entry to info_cache with fields Chrome needs to display profile correctly
+  const entry: Record<string, unknown> = {
     active_time: Date.now() / 1000,
     avatar_icon: 'chrome://theme/IDR_PROFILE_AVATAR_26',
     background_apps: false,
@@ -120,8 +129,23 @@ export async function createNewProfile(
     is_using_default_avatar: true,
     is_using_default_name: false,
     name: profileName,
-    user_name: '',
+    user_name: sourceMeta?.userName || '',
   };
+
+  // Add avatar/account metadata if available from source profile
+  if (sourceMeta) {
+    if (sourceMeta.gaiaName) entry.gaia_name = sourceMeta.gaiaName;
+    if (sourceMeta.gaiaId) entry.gaia_id = sourceMeta.gaiaId;
+    if (sourceMeta.pictureFileName) {
+      entry.gaia_picture_file_name = sourceMeta.pictureFileName;
+      entry.is_using_default_avatar = false;
+    }
+    if (sourceMeta.pictureUrl) {
+      entry.last_downloaded_gaia_picture_url_with_size = sourceMeta.pictureUrl;
+    }
+  }
+
+  infoCache[profileDir] = entry;
 
   // Write updated Local State
   await writeLocalState(chromeDataDir, state);

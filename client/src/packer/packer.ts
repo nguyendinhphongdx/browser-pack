@@ -31,7 +31,7 @@ export async function packProfile(options: PackOptions): Promise<PackResult> {
   logger.info(`Found ${fileList.length} files to pack.`);
 
   // 3. Create temp directory and tar.gz
-  const tmpDir = await mkdtemp(join(tmpdir(), 'browserpack-'));
+  const tmpDir = await mkdtemp(join(tmpdir(), 'bpacker-'));
   const archivePath = join(tmpDir, 'profile.tar.gz');
   const manifestPath = join(tmpDir, 'manifest.json');
 
@@ -51,7 +51,7 @@ export async function packProfile(options: PackOptions): Promise<PackResult> {
     const checksum = await computeChecksum(archivePath);
 
     // 5. Create manifest
-    const manifest = createManifest(options.profile, fileList, checksum);
+    const manifest = await createManifest(options.profile, fileList, checksum);
     await writeManifest(manifest, manifestPath);
 
     // 6. Get archive size

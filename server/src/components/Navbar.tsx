@@ -15,7 +15,7 @@ export default function Navbar({ email }: { email?: string }) {
 
         <div className="flex items-center gap-5">
           <Link
-            href="https://github.com/nicktoan2s/browserpack"
+            href="https://github.com/nguyendinhphongdx/browser-pack"
             target="_blank"
             className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
           >

@@ -18,7 +18,7 @@ function confirm(message: string): Promise<boolean> {
 }
 
 export const purgeCommand = new Command('purge')
-  .description('Remove all BrowserPack config and data (~/.browserpack)')
+  .description('Remove all BrowserPack config and data (~/.bpacker)')
   .option('-y, --yes', 'Skip confirmation prompt')
   .action(async (opts) => {
     const configPath = join(homedir(), CONFIG_DIR);
@@ -39,5 +39,5 @@ export const purgeCommand = new Command('purge')
 
     await rm(configPath, { recursive: true, force: true });
     logger.success('BrowserPack data purged.');
-    logger.info('Run `npm uninstall -g @phongnd-base/browserpack` to fully uninstall.');
+    logger.info('Run `npm uninstall -g @hanoilab/bpacker` to fully uninstall.');
   });

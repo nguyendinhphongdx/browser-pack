@@ -58,7 +58,7 @@ export const packCommand = new Command('pack')
   .description('Pack a browser profile and upload to cloud')
   .option('-b, --browser <type>', 'Browser type (chrome, brave, edge, chromium)')
   .option('-p, --profile <name>', 'Profile name')
-  .option('--preset <preset>', 'Pack preset (full, sessions-only, bookmarks-only)', 'sessions-only')
+  .option('--preset <preset>', 'Pack preset (full, sessions-only, bookmarks-only)', 'full')
   .option('--include-extensions', 'Include browser extensions', false)
   .option('--include-history', 'Include browsing history', false)
   .option('--include-passwords', 'Include saved passwords (OS-bound)', false)
@@ -137,7 +137,7 @@ export const packCommand = new Command('pack')
         const ext = shouldEncrypt ? '.bpak' : '.tar.gz';
         const outputPath = opts.output
           ? resolve(opts.output)
-          : join(process.cwd(), `browserpack-${profile.browser}-${Date.now()}${ext}`);
+          : join(process.cwd(), `bpacker-${profile.browser}-${Date.now()}${ext}`);
         await copyFile(finalArchivePath, outputPath);
 
         const manifestPath = outputPath.replace(ext, '.manifest.json');
@@ -148,7 +148,7 @@ export const packCommand = new Command('pack')
         // Upload to server
         const auth = await loadAuth();
         if (!auth) {
-          logger.error('Not logged in. Run "browserpack login" or use --local-only.');
+          logger.error('Not logged in. Run "bpacker login" or use --local-only.');
           process.exit(1);
         }
 

@@ -43,16 +43,24 @@ export function getIncludePatterns(config: FileFilterConfig): string[] | null {
 export function getExcludePatterns(config: FileFilterConfig): string[] {
   const excludes = [...ALWAYS_EXCLUDE_PATTERNS];
 
-  if (!config.includeExtensions && config.preset !== 'sessions-only' && config.preset !== 'bookmarks-only') {
-    excludes.push(...EXTENSION_PATTERNS);
-  }
-
-  if (!config.includeHistory && config.preset === 'full') {
-    excludes.push(...HISTORY_FILES);
-  }
-
-  if (!config.includePasswords && config.preset === 'full') {
-    excludes.push('Login Data', 'Login Data-journal');
+  if (config.preset === 'full') {
+    // Full preset: include everything by default
+    // Only exclude if user explicitly opts out
+    if (config.includeExtensions === false) {
+      excludes.push(...EXTENSION_PATTERNS);
+    }
+    // History, passwords, bookmarks all included by default in full
+  } else if (config.preset !== 'sessions-only' && config.preset !== 'bookmarks-only') {
+    // Custom or other presets
+    if (!config.includeExtensions) {
+      excludes.push(...EXTENSION_PATTERNS);
+    }
+    if (!config.includeHistory) {
+      excludes.push(...HISTORY_FILES);
+    }
+    if (!config.includePasswords) {
+      excludes.push('Login Data', 'Login Data-journal');
+    }
   }
 
   if (config.customExclude) {

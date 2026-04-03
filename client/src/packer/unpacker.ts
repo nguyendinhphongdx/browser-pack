@@ -9,7 +9,7 @@ import { createNewProfile } from '../profile/chrome.js';
 import { logger } from '../core/logger.js';
 import { BrowserPackError } from '../core/errors.js';
 
-const MARKER_FILE = '.browserpack';
+const MARKER_FILE = '.bpacker';
 
 interface BrowserPackMarker {
   backupId: string;
@@ -72,13 +72,14 @@ export async function unpackProfile(options: UnpackOptions): Promise<ProfileInfo
     } else {
       // New pull → create new profile with distinct name
       const baseName = manifest.profileName || 'Restored';
-      const profileName = `${baseName} (browserpack)`;
+      const profileName = `${baseName} (bpacker)`;
       logger.info(`Creating new profile: ${profileName}`);
       restoreProfile = await createNewProfile(
         chromeDataDir,
         profileName,
         options.targetProfile.browser,
         options.targetProfile.platform,
+        manifest.profileMeta,
       );
     }
   }

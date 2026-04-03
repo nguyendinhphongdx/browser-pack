@@ -11,7 +11,7 @@ export const remoteProfileListCommand = new Command('ls')
     try {
       const auth = await loadAuth();
       if (!auth) {
-        logger.error('Not logged in. Run "browserpack login" first.');
+        logger.error('Not logged in. Run "bpacker login" first.');
         process.exit(1);
       }
 

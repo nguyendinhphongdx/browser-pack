@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { hostname } from 'node:os';
+import { join, dirname, basename } from 'node:path';
 import type { PackManifest, ProfileInfo } from '../core/types.js';
 import {
   APP_VERSION,
@@ -11,14 +12,17 @@ import {
 } from '../core/constants.js';
 import { ManifestError } from '../core/errors.js';
 
-export function createManifest(
+export async function createManifest(
   profile: ProfileInfo,
   includedFiles: string[],
   checksum: string,
-): PackManifest {
+): Promise<PackManifest> {
+  // Extract profile metadata from Local State for avatar restoration
+  const profileMeta = await extractProfileMeta(profile);
+
   return {
     version: 1,
-    browserpack: APP_VERSION,
+    bpacker: APP_VERSION,
     browser: profile.browser,
     browserVersion: profile.browserVersion,
     profileName: profile.profileName,
@@ -27,6 +31,7 @@ export function createManifest(
     hostname: hostname(),
     includedFiles,
     checksum,
+    profileMeta,
     encryption: {
       algorithm: 'aes-256-gcm',
       kdf: 'argon2id',
@@ -38,6 +43,27 @@ export function createManifest(
       },
     },
   };
+}
+
+async function extractProfileMeta(profile: ProfileInfo): Promise<PackManifest['profileMeta']> {
+  try {
+    const chromeDataDir = dirname(profile.profilePath);
+    const profileDir = basename(profile.profilePath);
+    const localStateRaw = await readFile(join(chromeDataDir, 'Local State'), 'utf-8');
+    const localState = JSON.parse(localStateRaw);
+    const entry = localState?.profile?.info_cache?.[profileDir];
+    if (!entry) return undefined;
+
+    return {
+      gaiaName: entry.gaia_name || undefined,
+      userName: entry.user_name || undefined,
+      gaiaId: entry.gaia_id || undefined,
+      pictureFileName: entry.gaia_picture_file_name || undefined,
+      pictureUrl: entry.last_downloaded_gaia_picture_url_with_size || undefined,
+    };
+  } catch {
+    return undefined;
+  }
 }
 
 export async function computeChecksum(filePath: string): Promise<string> {

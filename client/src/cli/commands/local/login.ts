@@ -5,7 +5,7 @@ import { exec } from 'node:child_process';
 import { logger } from '../../../core/logger.js';
 import { saveAuth } from '../../../auth/store.js';
 
-const DEFAULT_SERVER_URL = process.env.BROWSERPACK_SERVER || 'https://browser-pack.vercel.app';
+const DEFAULT_SERVER_URL = process.env.BPACKER_SERVER || 'https://browser-pack.vercel.app';
 
 function ask(question: string, hide = false): Promise<string> {
   const rl = createInterface({ input: process.stdin, output: process.stderr });
@@ -116,7 +116,7 @@ async function loginWithEmail(serverUrl: string): Promise<{ token: string; email
 
 export const loginCommand = new Command('login')
   .description('Login to BrowserPack')
-  .option('--server <url>', 'Server URL (or set BROWSERPACK_SERVER env)', DEFAULT_SERVER_URL)
+  .option('--server <url>', 'Server URL (or set BPACKER_SERVER env)', DEFAULT_SERVER_URL)
   .option('--email', 'Login with email/password instead of browser', false)
   .action(async (opts) => {
     const serverUrl = (opts.server as string).replace(/\/$/, '');

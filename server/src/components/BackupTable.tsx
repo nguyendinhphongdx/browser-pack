@@ -38,7 +38,7 @@ export default function BackupTable({ initialBackups }: { initialBackups: Backup
         <p className="text-lg mb-2">No backups yet</p>
         <p className="text-sm">
           Use the CLI to pack your first browser profile:
-          <code className="ml-2 bg-[var(--code-bg)] px-2 py-1 rounded text-[var(--accent)]">browserpack pack</code>
+          <code className="ml-2 bg-[var(--code-bg)] px-2 py-1 rounded text-[var(--accent)]">bpacker pack</code>
         </p>
       </div>
     );

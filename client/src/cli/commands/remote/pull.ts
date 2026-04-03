@@ -50,7 +50,7 @@ export const pullCommand = new Command('pull')
         // Download from cloud
         const auth = await loadAuth();
         if (!auth) {
-          logger.error('Not logged in. Run "browserpack login" first.');
+          logger.error('Not logged in. Run "bpacker login" first.');
           process.exit(1);
         }
 
@@ -65,17 +65,17 @@ export const pullCommand = new Command('pull')
           const backups = await client.listBackups();
           const match = backups.find((b) => b.name === opts.name);
           if (!match) {
-            logger.error(`Backup "${opts.name}" not found. Run "browserpack remote profile ls" to see available backups.`);
+            logger.error(`Backup "${opts.name}" not found. Run "bpacker remote profile ls" to see available backups.`);
             process.exit(1);
           }
           backupId = match.id;
           backupName = match.name;
         } else {
-          logger.error('Specify --id or --name. Run "browserpack remote profile ls" to see available backups.');
+          logger.error('Specify --id or --name. Run "bpacker remote profile ls" to see available backups.');
           process.exit(1);
         }
 
-        tmpDir = await mkdtemp(join(tmpdir(), 'browserpack-pull-'));
+        tmpDir = await mkdtemp(join(tmpdir(), 'bpacker-pull-'));
         bpakPath = join(tmpDir, `${backupId}.bpak`);
         manifestPath = join(tmpDir, `${backupId}.manifest.json`);
 
@@ -92,7 +92,7 @@ export const pullCommand = new Command('pull')
       // Decrypt if .bpak
       let archivePath: string;
       if (bpakPath.endsWith('.bpak')) {
-        const decDir = tmpDir ?? await mkdtemp(join(tmpdir(), 'browserpack-dec-'));
+        const decDir = tmpDir ?? await mkdtemp(join(tmpdir(), 'bpacker-dec-'));
         if (!tmpDir) tmpDir = decDir;
         archivePath = join(decDir, 'profile.tar.gz');
 

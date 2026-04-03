@@ -43,7 +43,7 @@ describe('Encryption', () => {
   const password = 'test-encryption-password-2024';
 
   beforeAll(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), 'browserpack-crypto-test-'));
+    tmpDir = await mkdtemp(join(tmpdir(), 'bpacker-crypto-test-'));
   });
 
   afterAll(async () => {

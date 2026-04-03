@@ -11,7 +11,7 @@ Pack, encrypt, and sync browser profiles across machines. No re-login needed.
 ## Install
 
 ```bash
-npm install -g browserpack
+npm install -g bpacker
 ```
 
 Requires Node.js 18+.
@@ -20,18 +20,18 @@ Requires Node.js 18+.
 
 ```bash
 # Login
-browserpack login
+bpacker login
 
 # See local browser profiles
-browserpack profile ls
+bpacker profile ls
 
 # Pack and upload a profile
-browserpack pack
+bpacker pack
 
 # On another machine: login and pull
-browserpack login
-browserpack remote profile ls
-browserpack pull --name <backup-name>
+bpacker login
+bpacker remote profile ls
+bpacker pull --name <backup-name>
 ```
 
 ## CLI Commands
@@ -40,31 +40,31 @@ browserpack pull --name <backup-name>
 
 | Command | Description |
 |---------|-------------|
-| `browserpack login` | Login via browser (Google or email) |
-| `browserpack login --email` | Login with email/password in terminal |
-| `browserpack logout` | Clear saved credentials |
-| `browserpack whoami` | Show current logged-in user |
+| `bpacker login` | Login via browser (Google or email) |
+| `bpacker login --email` | Login with email/password in terminal |
+| `bpacker logout` | Clear saved credentials |
+| `bpacker whoami` | Show current logged-in user |
 
 ### Local profiles
 
 | Command | Description |
 |---------|-------------|
-| `browserpack profile ls` | List all local browser profiles |
-| `browserpack profile ls --browser chrome` | Filter by browser |
-| `browserpack profile rm` | Remove a local profile (interactive) |
-| `browserpack pack` | Interactive: pick profile, encrypt, upload |
-| `browserpack pack --browser chrome --profile "base.vn"` | Pack specific profile |
-| `browserpack pack --local-only -o backup.bpak` | Save locally only |
+| `bpacker profile ls` | List all local browser profiles |
+| `bpacker profile ls --browser chrome` | Filter by browser |
+| `bpacker profile rm` | Remove a local profile (interactive) |
+| `bpacker pack` | Interactive: pick profile, encrypt, upload |
+| `bpacker pack --browser chrome --profile "base.vn"` | Pack specific profile |
+| `bpacker pack --local-only -o backup.bpak` | Save locally only |
 
 ### Remote backups
 
 | Command | Description |
 |---------|-------------|
-| `browserpack remote profile ls` | List backups on cloud |
-| `browserpack pull --id <id>` | Pull backup by ID |
-| `browserpack pull --name <name>` | Pull backup by name |
-| `browserpack pull --from-file backup.bpak` | Restore from local file |
-| `browserpack remote rm <id>` | Delete a backup from cloud |
+| `bpacker remote profile ls` | List backups on cloud |
+| `bpacker pull --id <id>` | Pull backup by ID |
+| `bpacker pull --name <name>` | Pull backup by name |
+| `bpacker pull --from-file backup.bpak` | Restore from local file |
+| `bpacker remote rm <id>` | Delete a backup from cloud |
 
 ### Pack options
 

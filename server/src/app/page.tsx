@@ -36,12 +36,12 @@ const FEATURES = [
 ];
 
 const CLI_COMMANDS = [
-  { cmd: 'browserpack login', desc: 'Login via browser (Google or email)' },
-  { cmd: 'browserpack profile ls', desc: 'List all local browser profiles' },
-  { cmd: 'browserpack pack', desc: 'Pack & upload a browser profile' },
-  { cmd: 'browserpack pull --name <name>', desc: 'Pull a backup on another machine' },
-  { cmd: 'browserpack remote profile ls', desc: 'List backups on cloud' },
-  { cmd: 'browserpack whoami', desc: 'Show current logged-in user' },
+  { cmd: 'bpacker login', desc: 'Login via browser (Google or email)' },
+  { cmd: 'bpacker profile ls', desc: 'List all local browser profiles' },
+  { cmd: 'bpacker pack', desc: 'Pack & upload a browser profile' },
+  { cmd: 'bpacker pull --name <name>', desc: 'Pull a backup on another machine' },
+  { cmd: 'bpacker remote profile ls', desc: 'List backups on cloud' },
+  { cmd: 'bpacker whoami', desc: 'Show current logged-in user' },
 ];
 
 export default function LandingPage() {
@@ -79,7 +79,7 @@ export default function LandingPage() {
                 Get Started
               </Link>
               <Link
-                href="https://github.com/nicktoan2s/browserpack"
+                href="https://github.com/nicktoan2s/bpacker"
                 target="_blank"
                 className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] px-7 py-3.5 text-sm font-semibold text-[var(--foreground)] hover:border-[var(--muted)] transition-colors"
               >
@@ -92,9 +92,9 @@ export default function LandingPage() {
               <div className="code-block relative">
                 <pre className="text-left">
                   <span className="text-[var(--muted)]">$</span>{' '}
-                  <span className="text-[var(--accent)]">npm</span> install -g @phongnd-base/browserpack
+                  <span className="text-[var(--accent)]">npm</span> install -g @hanoilab/bpacker
                 </pre>
-                <CopyButton text="npm install -g @phongnd-base/browserpack" />
+                <CopyButton text="npm install -g @hanoilab/bpacker" />
               </div>
             </div>
           </div>
@@ -126,9 +126,9 @@ export default function LandingPage() {
                   </div>
                   <pre>
                     <span className="text-[var(--muted)]">$</span>{' '}
-                    <span className="text-[var(--accent)]">npm</span> install -g @phongnd-base/browserpack
+                    <span className="text-[var(--accent)]">npm</span> install -g @hanoilab/bpacker
                   </pre>
-                  <CopyButton text="npm install -g @phongnd-base/browserpack" />
+                  <CopyButton text="npm install -g @hanoilab/bpacker" />
                 </div>
               </div>
             </div>
@@ -149,18 +149,18 @@ export default function LandingPage() {
                   </div>
                   <pre>
                     <span className="text-[var(--muted)]">$</span>{' '}
-                    <span className="text-[var(--accent)]">browserpack</span> login{'\n'}
+                    <span className="text-[var(--accent)]">bpacker</span> login{'\n'}
                     <span className="text-[var(--muted)]"># Opens browser for Google or email login</span>{'\n'}
                     {'\n'}
                     <span className="text-[var(--muted)]">$</span>{' '}
-                    <span className="text-[var(--accent)]">browserpack</span> profile ls{'\n'}
+                    <span className="text-[var(--accent)]">bpacker</span> profile ls{'\n'}
                     <span className="text-[var(--muted)]"># Lists all local browser profiles</span>{'\n'}
                     {'\n'}
                     <span className="text-[var(--muted)]">$</span>{' '}
-                    <span className="text-[var(--accent)]">browserpack</span> pack{'\n'}
+                    <span className="text-[var(--accent)]">bpacker</span> pack{'\n'}
                     <span className="text-[var(--muted)]"># Interactive: pick profile, encrypt, upload</span>
                   </pre>
-                  <CopyButton text="browserpack login && browserpack profile ls && browserpack pack" />
+                  <CopyButton text="bpacker login && bpacker profile ls && bpacker pack" />
                 </div>
               </div>
             </div>
@@ -181,17 +181,17 @@ export default function LandingPage() {
                   </div>
                   <pre>
                     <span className="text-[var(--muted)]">$</span>{' '}
-                    <span className="text-[var(--accent)]">browserpack</span> login{'\n'}
+                    <span className="text-[var(--accent)]">bpacker</span> login{'\n'}
                     {'\n'}
                     <span className="text-[var(--muted)]">$</span>{' '}
-                    <span className="text-[var(--accent)]">browserpack</span> remote profile ls{'\n'}
+                    <span className="text-[var(--accent)]">bpacker</span> remote profile ls{'\n'}
                     <span className="text-[var(--muted)]"># Shows your cloud backups</span>{'\n'}
                     {'\n'}
                     <span className="text-[var(--muted)]">$</span>{' '}
-                    <span className="text-[var(--accent)]">browserpack</span> pull --name my-profile{'\n'}
+                    <span className="text-[var(--accent)]">bpacker</span> pull --name my-profile{'\n'}
                     <span className="text-[var(--muted)]"># Decrypts and restores the profile</span>
                   </pre>
-                  <CopyButton text="browserpack login && browserpack remote profile ls && browserpack pull --name my-profile" />
+                  <CopyButton text="bpacker login && bpacker remote profile ls && bpacker pull --name my-profile" />
                 </div>
               </div>
             </div>
@@ -331,10 +331,10 @@ export default function LandingPage() {
             BrowserPack &mdash; Open source browser profile sync tool
           </div>
           <div className="flex items-center gap-6">
-            <Link href="https://github.com/nicktoan2s/browserpack" target="_blank" className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
+            <Link href="https://github.com/nicktoan2s/bpacker" target="_blank" className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
               GitHub
             </Link>
-            <Link href="https://www.npmjs.com/package/@phongnd-base/browserpack" target="_blank" className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
+            <Link href="https://www.npmjs.com/package/@hanoilab/bpacker" target="_blank" className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
               npm
             </Link>
             <span className="text-sm text-[var(--muted)]">MIT License</span>

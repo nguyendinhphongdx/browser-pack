@@ -1,6 +1,6 @@
 import type { BrowserType, Platform } from './types.js';
 
-export const APP_NAME = 'browserpack';
+export const APP_NAME = 'bpacker';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,14 +12,14 @@ function findPackageVersion(): string {
   for (let i = 0; i < 5; i++) {
     try {
       const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf-8'));
-      if (pkg.name === '@phongnd-base/browserpack') return pkg.version;
+      if (pkg.name === '@hanoilab/bpacker') return pkg.version;
     } catch { /* continue */ }
     dir = dirname(dir);
   }
   return '0.0.0';
 }
 export const APP_VERSION: string = findPackageVersion();
-export const CONFIG_DIR = '.browserpack';
+export const CONFIG_DIR = '.bpacker';
 export const CONFIG_FILE = 'config.json';
 
 // Chrome profile data directory paths per OS

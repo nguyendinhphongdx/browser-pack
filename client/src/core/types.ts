@@ -14,7 +14,7 @@ export interface ProfileInfo {
 
 export interface PackManifest {
   version: 1;
-  browserpack: string;
+  bpacker: string;
   browser: BrowserType;
   browserVersion?: string;
   profileName: string;
@@ -23,6 +23,13 @@ export interface PackManifest {
   hostname: string;
   includedFiles: string[];
   checksum: string;
+  profileMeta?: {
+    gaiaName?: string;
+    userName?: string;
+    gaiaId?: string;
+    pictureFileName?: string;
+    pictureUrl?: string;
+  };
   encryption: {
     algorithm: 'aes-256-gcm';
     kdf: 'argon2id';

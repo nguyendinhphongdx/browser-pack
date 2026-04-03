@@ -17,7 +17,7 @@ import { pullCommand } from './commands/remote/pull.js';
 import { remoteDeleteCommand } from './commands/remote/delete.js';
 
 export function createProgram(): Command {
-  const program = new Command('browserpack')
+  const program = new Command('bpacker')
     .version(APP_VERSION)
     .description('Pack, encrypt, and sync browser profiles across machines');
 

@@ -23,7 +23,7 @@ describe('Packer round-trip', () => {
   };
 
   beforeAll(async () => {
-    tmpDir = await mkdtemp(join(tmpdir(), 'browserpack-test-'));
+    tmpDir = await mkdtemp(join(tmpdir(), 'bpacker-test-'));
     archivePath = join(tmpDir, 'test.tar.gz');
     extractDir = join(tmpDir, 'extracted');
     await mkdir(extractDir, { recursive: true });
@@ -79,7 +79,7 @@ describe('Packer round-trip', () => {
       includePasswords: true,
     });
     const checksum = await computeChecksum(archivePath);
-    const manifest = createManifest(fakeProfile, fileList, checksum);
+    const manifest = await createManifest(fakeProfile, fileList, checksum);
 
     expect(manifest.version).toBe(1);
     expect(manifest.browser).toBe('chrome');
