@@ -56,6 +56,16 @@ export async function generateSignedUploadUrl(key: string, expiresInMinutes = 30
   return url;
 }
 
+export async function generateSignedDownloadUrl(key: string, expiresInMinutes = 30): Promise<string> {
+  const file = getBucket().file(key);
+  const [url] = await file.getSignedUrl({
+    version: 'v4',
+    action: 'read',
+    expires: Date.now() + expiresInMinutes * 60 * 1000,
+  });
+  return url;
+}
+
 export async function fileExistsInStorage(key: string): Promise<boolean> {
   const [exists] = await getBucket().file(key).exists();
   return exists;

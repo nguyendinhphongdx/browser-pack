@@ -97,23 +97,29 @@ export class ApiClient {
     destPath: string,
     onProgress?: ProgressCallback,
   ): Promise<void> {
-    const res = await fetch(`${this.serverUrl}/api/backups/${id}/download`, {
+    // Step 1: Get signed download URL from server
+    const metaRes = await fetch(`${this.serverUrl}/api/backups/${id}/download`, {
       headers: this.headers(),
     });
-    if (!res.ok) throw new Error(`Download failed: ${res.status} ${await res.text()}`);
+    if (!metaRes.ok) throw new Error(`Download failed: ${metaRes.status} ${await metaRes.text()}`);
 
-    const totalSize = parseInt(res.headers.get('content-length') || '0', 10);
+    const { downloadUrl, size } = (await metaRes.json()) as { downloadUrl: string; size: number };
+
+    // Step 2: Download directly from GCS
+    const res = await fetch(downloadUrl);
+    if (!res.ok) throw new Error(`GCS download failed: ${res.status}`);
+
     const body = res.body;
     if (!body) throw new Error('Empty download response');
 
     const writer = createWriteStream(destPath);
     const reader = Readable.fromWeb(body as any);
 
-    if (onProgress && totalSize > 0) {
+    if (onProgress && size > 0) {
       let transferred = 0;
       reader.on('data', (chunk: Buffer) => {
         transferred += chunk.length;
-        onProgress(transferred, totalSize);
+        onProgress(transferred, size);
       });
     }
 
@@ -121,10 +127,16 @@ export class ApiClient {
   }
 
   async downloadManifest(id: string, destPath: string): Promise<void> {
-    const res = await fetch(`${this.serverUrl}/api/backups/${id}/manifest`, {
+    // Get signed URL then download from GCS
+    const metaRes = await fetch(`${this.serverUrl}/api/backups/${id}/manifest`, {
       headers: this.headers(),
     });
-    if (!res.ok) throw new Error(`Manifest download failed: ${res.status}`);
+    if (!metaRes.ok) throw new Error(`Manifest download failed: ${metaRes.status}`);
+
+    const { downloadUrl } = (await metaRes.json()) as { downloadUrl: string };
+
+    const res = await fetch(downloadUrl);
+    if (!res.ok) throw new Error(`GCS manifest download failed: ${res.status}`);
 
     const data = await res.text();
     const { writeFile } = await import('node:fs/promises');
