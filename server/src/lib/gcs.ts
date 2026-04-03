@@ -44,3 +44,19 @@ export async function getStorageObjectSize(key: string): Promise<number> {
 export async function deleteFromStorage(key: string): Promise<void> {
   await getBucket().file(key).delete({ ignoreNotFound: true });
 }
+
+export async function generateSignedUploadUrl(key: string, expiresInMinutes = 30): Promise<string> {
+  const file = getBucket().file(key);
+  const [url] = await file.getSignedUrl({
+    version: 'v4',
+    action: 'write',
+    expires: Date.now() + expiresInMinutes * 60 * 1000,
+    contentType: 'application/octet-stream',
+  });
+  return url;
+}
+
+export async function fileExistsInStorage(key: string): Promise<boolean> {
+  const [exists] = await getBucket().file(key).exists();
+  return exists;
+}

@@ -1,5 +1,5 @@
 import { createReadStream, createWriteStream } from 'node:fs';
-import { stat } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import { pipeline } from 'node:stream/promises';
 import { Readable } from 'node:stream';
 import type { ProgressCallback } from '../core/types.js';
@@ -48,25 +48,39 @@ export class ApiClient {
     bpakPath: string,
     manifestPath: string,
     name?: string,
+    onProgress?: ProgressCallback,
   ): Promise<BackupInfo> {
-    const { readFile } = await import('node:fs/promises');
+    const manifestJson = await readFile(manifestPath, 'utf-8');
+    const fileSize = (await stat(bpakPath)).size;
 
-    const bpakData = await readFile(bpakPath);
-    const manifestData = await readFile(manifestPath);
-
-    const formData = new FormData();
-    formData.append('file', new Blob([bpakData]), 'backup.bpak');
-    formData.append('manifest', new Blob([manifestData]), 'manifest.json');
-    if (name) formData.append('name', name);
-
-    const res = await fetch(`${this.serverUrl}/api/backups`, {
+    // Step 1: Init backup — server creates DB record + returns signed GCS URL
+    const initRes = await fetch(`${this.serverUrl}/api/backups`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${this.token}` },
-      body: formData,
+      headers: { ...this.headers(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, size: fileSize, manifestJson }),
     });
 
-    if (!res.ok) throw new Error(`Upload failed: ${res.status} ${await res.text()}`);
-    return (await res.json()) as BackupInfo;
+    if (!initRes.ok) throw new Error(`Init failed: ${initRes.status} ${await initRes.text()}`);
+    const { backupId, uploadUrl } = (await initRes.json()) as { backupId: string; uploadUrl: string };
+
+    // Step 2: Upload .bpak directly to GCS via signed URL
+    const fileData = await readFile(bpakPath);
+    const uploadRes = await fetch(uploadUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/octet-stream' },
+      body: fileData,
+    });
+
+    if (!uploadRes.ok) throw new Error(`GCS upload failed: ${uploadRes.status}`);
+
+    // Step 3: Confirm upload — server verifies file exists
+    const confirmRes = await fetch(`${this.serverUrl}/api/backups/${backupId}/confirm`, {
+      method: 'POST',
+      headers: this.headers(),
+    });
+
+    if (!confirmRes.ok) throw new Error(`Confirm failed: ${confirmRes.status} ${await confirmRes.text()}`);
+    return (await confirmRes.json()) as BackupInfo;
   }
 
   async listBackups(): Promise<BackupInfo[]> {

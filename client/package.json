@@ -1,6 +1,6 @@
 {
   "name": "@hanoilab/bpacker",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Pack, encrypt, and sync browser profiles across machines",
   "type": "module",
   "bin": {

@@ -1,19 +1,17 @@
 import { prisma } from '@/lib/prisma';
-import { uploadToStorage, uploadBufferToStorage, deleteFromStorage } from '@/lib/gcs';
-import { rm } from 'node:fs/promises';
+import { uploadBufferToStorage, deleteFromStorage, generateSignedUploadUrl, fileExistsInStorage } from '@/lib/gcs';
 
-interface CreateBackupInput {
+interface InitBackupInput {
   userId: string;
   name: string;
   size: number;
   browser: string;
   platform: string;
   profileName: string;
-  bpakFilePath: string;
   manifestJson: string;
 }
 
-export async function createBackup(input: CreateBackupInput) {
+export async function initBackup(input: InitBackupInput) {
   const backup = await prisma.backup.create({
     data: {
       userId: input.userId,
@@ -30,24 +28,38 @@ export async function createBackup(input: CreateBackupInput) {
   const storageKey = `${input.userId}/${backup.id}.bpak`;
   const manifestKey = `${input.userId}/${backup.id}.manifest.json`;
 
-  try {
-    await uploadToStorage(storageKey, input.bpakFilePath);
-    await uploadBufferToStorage(manifestKey, Buffer.from(input.manifestJson, 'utf-8'));
+  // Update DB with storage keys
+  await prisma.backup.update({
+    where: { id: backup.id },
+    data: { storageKey, manifestKey },
+  });
 
-    const updated = await prisma.backup.update({
-      where: { id: backup.id },
-      data: { storageKey, manifestKey },
-    });
+  // Upload manifest (small JSON, ok through Vercel)
+  await uploadBufferToStorage(manifestKey, Buffer.from(input.manifestJson, 'utf-8'));
 
-    await rm(input.bpakFilePath, { force: true });
-    return updated;
-  } catch (error) {
-    await prisma.backup.delete({ where: { id: backup.id } }).catch(() => {});
-    await deleteFromStorage(storageKey).catch(() => {});
-    await deleteFromStorage(manifestKey).catch(() => {});
-    await rm(input.bpakFilePath, { force: true });
-    throw error;
+  // Generate signed URL for client to upload .bpak directly to GCS
+  const uploadUrl = await generateSignedUploadUrl(storageKey);
+
+  return { backupId: backup.id, uploadUrl };
+}
+
+export async function confirmBackup(backupId: string, userId: string) {
+  const backup = await prisma.backup.findFirst({
+    where: { id: backupId, userId },
+  });
+
+  if (!backup) return null;
+
+  // Verify the file actually exists in GCS
+  const exists = await fileExistsInStorage(backup.storageKey);
+  if (!exists) {
+    // File not uploaded, cleanup
+    await prisma.backup.delete({ where: { id: backupId } }).catch(() => {});
+    await deleteFromStorage(backup.manifestKey).catch(() => {});
+    return null;
   }
+
+  return backup;
 }
 
 export async function listBackups(userId: string) {
